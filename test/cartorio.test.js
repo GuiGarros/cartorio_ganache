@@ -1,9 +1,9 @@
-const assert = require("assert");
-const ganache = require("ganache");
-const { Web3 } = require("web3");
+const assert = require('assert');
+const ganache = require('ganache');
+const { Web3 } = require('web3');
 const web3 = new Web3(ganache.provider());
 
-const { interface, bytecode } = require("../compile");
+const { abi, evm } = require("../compile");
 
 let cartorio;
 let accounts;
@@ -11,9 +11,10 @@ let accounts;
 beforeEach(async () => {
   accounts = await web3.eth.getAccounts();
 
-  cartorio = await new web3.eth.Contract(JSON.parse(interface))
-    .deploy({ data: bytecode })
-    .send({ from: accounts[0], gas: "1000000" });
+  cartorio = await new web3.eth.Contract(abi)
+    .deploy({ data: evm.bytecode.object })
+    .send({ from: accounts[0], gas: '1000000' });
+    
 });
 
 describe("cartorio Contract", () => {
@@ -30,7 +31,7 @@ describe("cartorio Contract", () => {
       from: accounts[0]
     });
 
-    await cartorio.methods.comprador(accounts[1]).send({
+    await cartorio.methods.compradorAddress(accounts[1]).send({
       from: accounts[1]
     }); 
     const set = 1;

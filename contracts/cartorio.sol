@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.4.17;
+pragma solidity ^0.8.9;
 
 contract cartorio {
-    address public vendedor;
+    address payable public vendedor;
     address public comprador;
     uint public valor;
 
-    constructor() public{
-        vendedor = msg.sender;
+    constructor() {
+        vendedor = payable(msg.sender);
     }
 
     function setValor(uint preco) public payable{
         valor = preco*1000000000000000000;
     }
 
-    function comprador(address addressComprador) public payable {
+    function compradorAddress(address addressComprador) public payable{
        comprador = addressComprador;
     }
 
     function concluiCompra() public payable soComprador{
         require(msg.value >= valor );
-        vendedor.transfer(this.balance);
+        vendedor.transfer(address(this).balance);
     }
 
     modifier soComprador() {
